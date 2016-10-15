@@ -10,11 +10,14 @@ public class playerManager : MonoBehaviour {
 
     public bool is_jumping = false;
     public bool in_air = false;
+	public bool in_slide = false;
+
+	Animator animator;
 
 	void Start ()
     {
         rb = this.GetComponent<Rigidbody2D>();
-
+		animator = this.GetComponent<Animator> ();
 	}
 	
 	void Update ()
@@ -25,7 +28,19 @@ public class playerManager : MonoBehaviour {
             in_air = true;
 
         }
+		if (Input.GetKey (KeyCode.S) && !is_jumping && !in_air) {
+			//transform.localEulerAngles = new Vector3 (0, 0, 90);
+			//if(!in_slide) transform.position += new Vector3(0,-1.4f,0);
+			//transform.localScale = new Vector3 (1, 0.5f, 1);
+			in_slide = true;
 
+		} else {
+			//if(in_slide) transform.position += new Vector3(0,1.4f,0);
+			//transform.localScale = new Vector3 (1, 1, 1);
+			in_slide = false;
+		}
+		animator.SetBool("is_sliding", in_slide);
+		animator.SetBool ("in_air", in_air);
 	}
 
     void FixedUpdate()

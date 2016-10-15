@@ -5,10 +5,13 @@ public class positionalSpawn : MonoBehaviour {
 
 	public Camera cam;
 	public GameObject item_to_spawn;
+	public GameObject wall_to_spawn;
 
 	private float screenWidth;
 	private Vector3 last_pos;
-	[SerializeField] private float distance = 20;
+	[SerializeField] private float min_distance = 4;
+	[SerializeField] private float max_distance = 20;
+	private float distance = 20;
 
 	// Use this for initialization
 	void Start () {
@@ -22,14 +25,24 @@ public class positionalSpawn : MonoBehaviour {
 		if (cam.transform.position.x > last_pos.x + distance)
 		{
 			last_pos = cam.transform.position;
-			SpawnItem ();
+			if (Random.Range (0, 10) > 1)
+				SpawnItem ();
+			else
+				SpawnWall ();
+			distance = Random.Range (min_distance, max_distance);
 		}
 			
 	}
 
+	void SpawnWall()
+	{
+		Vector3 new_pos = new Vector3(cam.transform.position.x + screenWidth/2+1, 6.48f, 0);
+		Instantiate(wall_to_spawn, new_pos, Quaternion.identity);
+	}
+
 	void SpawnItem()
 	{
-		Vector3 new_pos = new Vector3(cam.transform.position.x + screenWidth/2, -2, 0);
+		Vector3 new_pos = new Vector3(cam.transform.position.x + screenWidth/2+1, -2+Random.Range(0,3)*2, 0);
 		Instantiate(item_to_spawn, new_pos, Quaternion.identity);
 
 	}
