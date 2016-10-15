@@ -8,7 +8,8 @@ public class playerManager : MonoBehaviour {
     public float run_speed;
     public float jump_force;
 
-    bool is_jumping = false;
+    public bool is_jumping = false;
+    public bool in_air = false;
 
 	void Start ()
     {
@@ -18,9 +19,10 @@ public class playerManager : MonoBehaviour {
 	
 	void Update ()
     {
-	    if (Input.GetKey(KeyCode.W) && !is_jumping)
+	    if (Input.GetKey(KeyCode.W) && !is_jumping && !in_air)
         {
-            StartCoroutine(JumpWait());
+            is_jumping = true;
+            in_air = true;
 
         }
 
@@ -32,17 +34,30 @@ public class playerManager : MonoBehaviour {
 
         if (is_jumping)
         {
-            rb.transform.Translate(Vector3.up * jump_force * Time.deltaTime);
+            rb.transform.Translate(Vector2.up * jump_force * Time.deltaTime);
 
         }
 
     }
 
-    IEnumerator JumpWait()
+    void OnCollisionEnter2D(Collision2D coll)
     {
-        is_jumping = true;
-        yield return new WaitForSeconds(1);
-        is_jumping = false;
+        if (coll.gameObject.tag == "Ground" && in_air)
+        {
+            is_jumping = false;
+            in_air = false;
+
+        }
+
+    }
+
+    void OnCollisionExit2D(Collision2D coll)
+    {
+        if (coll.gameObject.tag == "Ground" && !in_air && this.transform.position.y > 0)
+        {
+            in_air = true;
+
+        }
 
     }
 
