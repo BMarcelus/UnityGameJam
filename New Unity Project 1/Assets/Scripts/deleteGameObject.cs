@@ -3,18 +3,24 @@ using System.Collections;
 
 public class deleteGameObject : MonoBehaviour {
 
-    public int secs_until_delete;
+	public Camera cam;
+	private float screenWidth;
+	private float myWidth = 100;
 	
 	void Start()
     {
-        StartCoroutine(Countdown());
+		cam = Camera.main;
+		screenWidth = cam.aspect * 2f * cam.orthographicSize;
+		myWidth = GetComponent<Renderer> ().bounds.size.x;
 	}
+		
 
-    IEnumerator Countdown()
-    {
-        yield return new WaitForSeconds(secs_until_delete);
-        Destroy(this.gameObject);
-
-    }
+	void Update()
+	{
+		if (cam.transform.position.x > transform.position.x + myWidth / 2 + screenWidth / 2) 
+		{
+			Destroy (this.gameObject);
+		}
+	}
 
 }

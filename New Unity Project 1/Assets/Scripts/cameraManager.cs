@@ -5,9 +5,18 @@ public class cameraManager : MonoBehaviour {
 
 	public GameObject player;
 
+	private Vector3 offset;
+
+	void Start()
+	{
+		offset = transform.position-player.transform.position;
+	}
+
     void FixedUpdate()
     {
-        this.transform.position = Vector3.Lerp(transform.position, player.transform.position, 0.25f) + new Vector3(1, 0, -10);
+		Vector3 target = player.transform.position+offset;
+		target.y = offset.y;
+		this.transform.position = Vector3.Lerp(transform.position, target, 0.25f);
 
     }
 }
