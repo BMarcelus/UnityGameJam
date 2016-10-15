@@ -12,7 +12,7 @@ public class playerManager : MonoBehaviour {
     public bool in_air = false;
 	public bool in_slide = false;
 	public bool landing = false;
-	public float falling=0;
+	public bool touching = false;
 
 	Animator animator;
 
@@ -40,6 +40,9 @@ public class playerManager : MonoBehaviour {
 		animator.SetBool("is_sliding", in_slide);
 		if (landing)
 			landing = false;
+
+		//touching = (Input.GetKey (KeyCode.Space) && !is_jumping && !in_air);
+		//animator.SetBool ("touching", touching);
 
 	}
 
@@ -79,5 +82,20 @@ public class playerManager : MonoBehaviour {
         }
 
     }
+
+	void OnTriggerEnter2D(Collider2D other)
+	{
+		touching = true;
+		if (other.gameObject.tag == "Art" && !in_air && !in_slide) {
+			animator.SetBool ("touching", true);
+		}
+	}
+	void OnTriggerExit2D(Collider2D other)
+	{
+		touching = false;
+		if (other.gameObject.tag == "Art") {
+			animator.SetBool ("touching", false);
+		}
+	}
 
 }
