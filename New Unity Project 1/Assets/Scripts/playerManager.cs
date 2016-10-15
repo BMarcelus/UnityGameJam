@@ -11,6 +11,8 @@ public class playerManager : MonoBehaviour {
     public bool is_jumping = false;
     public bool in_air = false;
 	public bool in_slide = false;
+	public bool landing = false;
+	public float falling=0;
 
 	Animator animator;
 
@@ -22,34 +24,33 @@ public class playerManager : MonoBehaviour {
 	
 	void Update ()
     {
-	    if (Input.GetKey(KeyCode.W) && !is_jumping && !in_air)
+		animator.SetBool ("in_air", is_jumping);
+		if (Input.GetKey(KeyCode.W) && !is_jumping && !in_air && !landing)
         {
             is_jumping = true;
             in_air = true;
-
+			animator.SetBool ("in_air", is_jumping);
         }
 		if (Input.GetKey (KeyCode.S) && !is_jumping && !in_air) {
-			//transform.localEulerAngles = new Vector3 (0, 0, 90);
-			//if(!in_slide) transform.position += new Vector3(0,-1.4f,0);
-			//transform.localScale = new Vector3 (1, 0.5f, 1);
 			in_slide = true;
 
 		} else {
-			//if(in_slide) transform.position += new Vector3(0,1.4f,0);
-			//transform.localScale = new Vector3 (1, 1, 1);
 			in_slide = false;
 		}
 		animator.SetBool("is_sliding", in_slide);
-		animator.SetBool ("in_air", in_air);
+		if (landing)
+			landing = false;
+
 	}
 
     void FixedUpdate()
     {
-        rb.transform.Translate(Vector2.right * run_speed * Time.deltaTime);
+		rb.transform.position += (Vector3.right * run_speed * Time.deltaTime);
 
         if (is_jumping)
         {
-            rb.transform.Translate(Vector2.up * jump_force * Time.deltaTime);
+			Vector3 vy = (Vector3.up * jump_force * Time.deltaTime);
+			transform.position += vy;
 
         }
 
@@ -57,11 +58,14 @@ public class playerManager : MonoBehaviour {
 
     void OnCollisionEnter2D(Collision2D coll)
     {
-        if (coll.gameObject.tag == "Ground" && in_air)
+		
+		if (coll.gameObject.tag == "Ground" && in_air && 
+			transform.position.y-GetComponent<BoxCollider2D>().size.y/2>coll.gameObject.transform.position.y)
         {
             is_jumping = false;
             in_air = false;
-
+			animator.SetBool ("in_air", is_jumping);
+			landing = true;
         }
 
     }
