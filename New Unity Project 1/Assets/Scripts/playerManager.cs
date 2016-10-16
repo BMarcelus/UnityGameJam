@@ -1,16 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class playerManager : MonoBehaviour {
 
 	public GameObject cam;
     public GameObject Effect_Manager;
-	public AudioSource audio;
+	public AudioSource audi;
 
 	public GameObject fadeOut;
 
 	public AudioClip jumpSound;
 	public AudioClip dieSound;
+	public AudioClip slideSound;
 
     Rigidbody2D rb;
 
@@ -38,7 +40,7 @@ public class playerManager : MonoBehaviour {
     {
         rb = this.GetComponent<Rigidbody2D>();
 		animator = this.GetComponent<Animator> ();
-		audio = GetComponent<AudioSource>();
+		audi = GetComponent<AudioSource>();
 	}
 	
 	void Update ()
@@ -47,27 +49,28 @@ public class playerManager : MonoBehaviour {
 		animator.SetBool ("in_air", is_jumping);
 		if ( (Input.GetKey(KeyCode.W)||Input.GetKey(KeyCode.UpArrow)) && !is_jumping && !in_air && !landing && !touching &&!dead)
         {
-			audio.PlayOneShot (jumpSound, 1);
+			audi.Stop ();
+			audi.PlayOneShot (jumpSound, 1);
             is_jumping = true;
             in_air = true;
 			animator.SetBool ("in_air", is_jumping);
         }
 
 		bool slide = ( (Input.GetKey (KeyCode.S)||Input.GetKey(KeyCode.DownArrow)) && !is_jumping && !in_air && !touching);
-		if (slide && !slide_held) 
+		if (slide && !slide_held && !in_slide && !dead) 
 		{
 			StartSlide ();
 		}
 		if (slide_held && !slide) {
-			animator.SetBool ("is_sliding", false);
-			StopCoroutine (slideRoutine);
+			//animator.SetBool ("is_sliding", false);
+			//StopCoroutine (slideRoutine);
 		}
 		slide_held = slide;
 
 		if (landing)
 			landing = false;
 
-		bool touch = (Input.GetKey (KeyCode.Space) && !is_jumping && !in_air);
+		bool touch = (Input.GetKey (KeyCode.Space) && !is_jumping && !in_air && !in_slide);
 		if(!touching && touch)
 		{
 			BeginTouch ();
@@ -87,6 +90,7 @@ public class playerManager : MonoBehaviour {
 	{
 		in_slide = true;
 		animator.SetBool ("is_sliding", true);
+		audi.PlayOneShot (slideSound, 1);
 		yield return new WaitForSeconds(0.5f);
 		animator.SetBool ("is_sliding", false);
 		in_slide = false;
@@ -177,7 +181,7 @@ public class playerManager : MonoBehaviour {
 		
 		if (other.gameObject.tag == "Art") {
 			art_col = true;
-		} else if (other.gameObject.tag == "Crowd") {
+		} else if (other.gameObject.tag == "Crowd" && !dead) {
 			GameOver ();
 		}
 	}
@@ -201,9 +205,10 @@ public class playerManager : MonoBehaviour {
 	IEnumerator GameOverScene()
 	{
 		//yield return new WaitForSeconds (1f);
-		audio.PlayOneShot (dieSound, 1);
+		audi.PlayOneShot (dieSound, 1);
 		yield return new WaitForSeconds(7.5f);
-		Application.LoadLevel ("GameOver");
+		//Application.LoadLevel ("GameOver");
+		SceneManager.LoadScene ("GameOver");
 
 	}
 }
