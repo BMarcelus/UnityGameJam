@@ -4,6 +4,10 @@ using System.Collections;
 public class playerManager : MonoBehaviour {
 
     public GameObject Effect_Manager;
+	public AudioSource audio;
+
+	public AudioClip jumpSound;
+	public AudioClip dieSound;
 
     Rigidbody2D rb;
 
@@ -30,6 +34,7 @@ public class playerManager : MonoBehaviour {
     {
         rb = this.GetComponent<Rigidbody2D>();
 		animator = this.GetComponent<Animator> ();
+		audio = GetComponent<AudioSource>();
 	}
 	
 	void Update ()
@@ -37,6 +42,7 @@ public class playerManager : MonoBehaviour {
 		animator.SetBool ("in_air", is_jumping);
 		if (Input.GetKey(KeyCode.W) && !is_jumping && !in_air && !landing && !touching)
         {
+			audio.PlayOneShot (jumpSound, 1);
             is_jumping = true;
             in_air = true;
 			animator.SetBool ("in_air", is_jumping);
@@ -91,11 +97,7 @@ public class playerManager : MonoBehaviour {
 
 	void BeginTouch()
 	{
-		if (art_col)
-		{
-			
-			art_col = false;
-		}
+		
 		animator.SetBool ("touching", true);
 		StartCoroutine (TouchStoping());
 		stopTarget = this.transform.position + Vector3.right * 2;
@@ -104,10 +106,15 @@ public class playerManager : MonoBehaviour {
 	IEnumerator TouchStoping()
 	{
 		touching = true;
-		yield return new WaitForSeconds(0.75f);
+		yield return new WaitForSeconds(0.25f);
+		if (art_col) {
+			GetPoint ();
+			art_col = false;
+		}
+		yield return new WaitForSeconds(0.50f);
 		touching = false;
 		animator.SetBool ("touching", false);
-		GetPoint ();
+
 	}
 
 
@@ -171,7 +178,7 @@ public class playerManager : MonoBehaviour {
 
 	void GameOver()
 	{
-		
+		//audio.PlayOneShot (dieSound, 1);
 	}
 		
 }

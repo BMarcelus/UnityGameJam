@@ -45,13 +45,13 @@ public class positionalSpawn : MonoBehaviour {
 
 	void SpawnWall()
 	{
-		Vector3 new_pos = new Vector3(cam.transform.position.x + screenWidth/2+1, 6.48f, 0);
+		Vector3 new_pos = new Vector3(cam.transform.position.x + screenWidth/2+1, 6.48f, -.1f);
 		Instantiate(wall_to_spawn, new_pos, Quaternion.identity);
 	}
 
 	void SpawnItem()
 	{
-		Vector3 new_pos = new Vector3(cam.transform.position.x + screenWidth/2+1, -2+Random.Range(0,2)*3, 0);
+		Vector3 new_pos = new Vector3(cam.transform.position.x + screenWidth/2+2, -2, -.1f);
 		Instantiate(item_to_spawn, new_pos, Quaternion.identity);
 
 	}
