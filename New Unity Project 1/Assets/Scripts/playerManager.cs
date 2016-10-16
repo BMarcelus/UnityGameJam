@@ -15,7 +15,12 @@ public class playerManager : MonoBehaviour {
 	public bool touching = false;
 	public bool art_col = false;
 
+	private bool slide_held = false;
+
+	private IEnumerator slideRoutine;
+
 	public int points = 0;
+	private Vector3 stopTarget;
 
 	Animator animator;
 
@@ -34,13 +39,18 @@ public class playerManager : MonoBehaviour {
             in_air = true;
 			animator.SetBool ("in_air", is_jumping);
         }
-		if (Input.GetKey (KeyCode.S) && !is_jumping && !in_air &&!touching ) {
-			in_slide = true;
 
-		} else {
-			in_slide = false;
+		bool slide = (Input.GetKey (KeyCode.S) && !is_jumping && !in_air && !touching);
+		if (slide && !slide_held) 
+		{
+			StartSlide ();
 		}
-		animator.SetBool("is_sliding", in_slide);
+		if (slide_held && !slide) {
+			animator.SetBool ("is_sliding", false);
+			StopCoroutine (slideRoutine);
+		}
+		slide_held = slide;
+
 		if (landing)
 			landing = false;
 
@@ -54,6 +64,22 @@ public class playerManager : MonoBehaviour {
 
 	}
 
+	void StartSlide()
+	{
+		slideRoutine = SlideStopping ();
+		StartCoroutine (slideRoutine);
+	}
+
+	IEnumerator SlideStopping()
+	{
+		in_slide = true;
+		animator.SetBool ("is_sliding", true);
+		yield return new WaitForSeconds(0.5f);
+		animator.SetBool ("is_sliding", false);
+		in_slide = false;
+	}
+
+
 	void GetPoint()
 	{
 		points++;
@@ -64,10 +90,11 @@ public class playerManager : MonoBehaviour {
 		if (art_col)
 		{
 			GetPoint ();
+			art_col = false;
 		}
 		animator.SetBool ("touching", true);
 		StartCoroutine (TouchStoping());
-
+		stopTarget = this.transform.position + Vector3.right * 2;
 	}
 
 	IEnumerator TouchStoping()
@@ -81,8 +108,11 @@ public class playerManager : MonoBehaviour {
 
     void FixedUpdate()
     {
-		if(!touching)
-		rb.transform.position += (Vector3.right * run_speed * Time.deltaTime);
+		if (touching) {
+			transform.position = Vector3.Lerp(transform.position, stopTarget, 0.1f);
+		} else {
+			rb.transform.position += (Vector3.right * run_speed * Time.deltaTime);
+		}
 
         if (is_jumping)
         {

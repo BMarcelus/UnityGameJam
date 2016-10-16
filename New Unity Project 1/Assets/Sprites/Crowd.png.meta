@@ -1,9 +1,11 @@
 fileFormatVersion: 2
 guid: ffa335c385cd34940a1d9ead3aa9b01a
-timeCreated: 1476577191
+timeCreated: 1476577502
 licenseType: Free
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: Crowd_0
+    21300002: Crowd_2
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -51,7 +53,33 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: Crowd_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 6
+        width: 963
+        height: 774
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Crowd_2
+      rect:
+        serializedVersion: 2
+        x: 1015
+        y: 0
+        width: 949
+        height: 780
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
     outline: []
   spritePackingTag: 
   userData: 

@@ -5,6 +5,7 @@ public class paintingScript : MonoBehaviour {
 
 	[SerializeField] Sprite[] sprites;
 
+
 	// Use this for initialization
 	void Start () {
 		this.GetComponent<SpriteRenderer>().sprite=sprites[Random.Range(0,sprites.Length-1)];
