@@ -3,6 +3,8 @@ using System.Collections;
 
 public class playerManager : MonoBehaviour {
 
+    public GameObject Effect_Manager;
+
     Rigidbody2D rb;
 
     public float run_speed;
@@ -83,6 +85,8 @@ public class playerManager : MonoBehaviour {
 	void GetPoint()
 	{
 		points++;
+        Effect_Manager.GetComponent<effectManager>().PointEffect();
+
 	}
 
 	void BeginTouch()
