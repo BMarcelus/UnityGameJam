@@ -13,6 +13,9 @@ public class playerManager : MonoBehaviour {
 	public bool in_slide = false;
 	public bool landing = false;
 	public bool touching = false;
+	public bool art_col = false;
+
+	public int points = 0;
 
 	Animator animator;
 
@@ -25,13 +28,13 @@ public class playerManager : MonoBehaviour {
 	void Update ()
     {
 		animator.SetBool ("in_air", is_jumping);
-		if (Input.GetKey(KeyCode.W) && !is_jumping && !in_air && !landing)
+		if (Input.GetKey(KeyCode.W) && !is_jumping && !in_air && !landing && !touching)
         {
             is_jumping = true;
             in_air = true;
 			animator.SetBool ("in_air", is_jumping);
         }
-		if (Input.GetKey (KeyCode.S) && !is_jumping && !in_air) {
+		if (Input.GetKey (KeyCode.S) && !is_jumping && !in_air &&!touching ) {
 			in_slide = true;
 
 		} else {
@@ -41,13 +44,44 @@ public class playerManager : MonoBehaviour {
 		if (landing)
 			landing = false;
 
-		//touching = (Input.GetKey (KeyCode.Space) && !is_jumping && !in_air);
-		//animator.SetBool ("touching", touching);
+		bool touch = (Input.GetKey (KeyCode.Space) && !is_jumping && !in_air);
+		if(!touching && touch)
+		{
+			BeginTouch ();
+		}
+
+
 
 	}
 
+	void GetPoint()
+	{
+		points++;
+	}
+
+	void BeginTouch()
+	{
+		if (art_col)
+		{
+			GetPoint ();
+		}
+		animator.SetBool ("touching", true);
+		StartCoroutine (TouchStoping());
+
+	}
+
+	IEnumerator TouchStoping()
+	{
+		touching = true;
+		yield return new WaitForSeconds(0.75f);
+		touching = false;
+		animator.SetBool ("touching", false);
+	}
+
+
     void FixedUpdate()
     {
+		if(!touching)
 		rb.transform.position += (Vector3.right * run_speed * Time.deltaTime);
 
         if (is_jumping)
@@ -85,16 +119,16 @@ public class playerManager : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D other)
 	{
-		touching = true;
+		art_col = true;
 		if (other.gameObject.tag == "Art" && !in_air && !in_slide) {
-			animator.SetBool ("touching", true);
+			//animator.SetBool ("touching", true);
 		}
 	}
 	void OnTriggerExit2D(Collider2D other)
 	{
-		touching = false;
+		art_col = false;
 		if (other.gameObject.tag == "Art") {
-			animator.SetBool ("touching", false);
+			//animator.SetBool ("touching", false);
 		}
 	}
 
