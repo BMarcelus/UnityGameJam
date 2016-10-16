@@ -149,17 +149,24 @@ public class playerManager : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D other)
 	{
-		art_col = true;
-		if (other.gameObject.tag == "Art" && !in_air && !in_slide) {
-			//animator.SetBool ("touching", true);
+		
+		if (other.gameObject.tag == "Art") {
+			art_col = true;
+		} else if (other.gameObject.tag == "Crowd") {
+			GameOver ();
 		}
 	}
 	void OnTriggerExit2D(Collider2D other)
 	{
-		art_col = false;
 		if (other.gameObject.tag == "Art") {
-			//animator.SetBool ("touching", false);
+			art_col = false;
 		}
 	}
 
+
+	void GameOver()
+	{
+		
+	}
+		
 }
