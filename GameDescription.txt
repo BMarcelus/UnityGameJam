@@ -9,8 +9,8 @@ Neither the guards nor his mother can stop him from becoming the next art critic
 
 
 Controls:
-W - Jump
-S - Slide on the ground
+W, Up - Jump
+S, Down - Slide on the ground
 Spacebar - Touch a passing painting to gain a point (be careful of the crowd catching up!)
 
-
+Jump over benches and slide under the unfinished construction pillars - who would have thought that the construction workers forgot those?
