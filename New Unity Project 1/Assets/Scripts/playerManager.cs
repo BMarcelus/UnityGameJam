@@ -45,7 +45,7 @@ public class playerManager : MonoBehaviour {
     {
 		
 		animator.SetBool ("in_air", is_jumping);
-		if (Input.GetKey(KeyCode.W) && !is_jumping && !in_air && !landing && !touching &&!dead)
+		if ( (Input.GetKey(KeyCode.W)||Input.GetKey(KeyCode.UpArrow)) && !is_jumping && !in_air && !landing && !touching &&!dead)
         {
 			audio.PlayOneShot (jumpSound, 1);
             is_jumping = true;
@@ -53,7 +53,7 @@ public class playerManager : MonoBehaviour {
 			animator.SetBool ("in_air", is_jumping);
         }
 
-		bool slide = (Input.GetKey (KeyCode.S) && !is_jumping && !in_air && !touching);
+		bool slide = ( (Input.GetKey (KeyCode.S)||Input.GetKey(KeyCode.DownArrow)) && !is_jumping && !in_air && !touching);
 		if (slide && !slide_held) 
 		{
 			StartSlide ();
@@ -127,7 +127,7 @@ public class playerManager : MonoBehaviour {
     {
 		if (dead) {
 			Color color = fadeOut.GetComponent<SpriteRenderer> ().color;
-			color.a+=.025f;
+			color.a+=.01f;
 			fadeOut.GetComponent<SpriteRenderer> ().color = color;
 		}else
 		{
@@ -200,9 +200,9 @@ public class playerManager : MonoBehaviour {
 		
 	IEnumerator GameOverScene()
 	{
-		yield return new WaitForSeconds (1f);
+		//yield return new WaitForSeconds (1f);
 		audio.PlayOneShot (dieSound, 1);
-		yield return new WaitForSeconds(8.5f);
+		yield return new WaitForSeconds(7.5f);
 		Application.LoadLevel ("GameOver");
 
 	}
