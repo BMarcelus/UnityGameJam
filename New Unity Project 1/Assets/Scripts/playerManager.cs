@@ -3,8 +3,11 @@ using System.Collections;
 
 public class playerManager : MonoBehaviour {
 
+	public GameObject cam;
     public GameObject Effect_Manager;
 	public AudioSource audio;
+
+	public GameObject fadeOut;
 
 	public AudioClip jumpSound;
 	public AudioClip dieSound;
@@ -20,6 +23,7 @@ public class playerManager : MonoBehaviour {
 	public bool landing = false;
 	public bool touching = false;
 	public bool art_col = false;
+	public bool dead = false;
 
 	private bool slide_held = false;
 
@@ -39,8 +43,9 @@ public class playerManager : MonoBehaviour {
 	
 	void Update ()
     {
+		
 		animator.SetBool ("in_air", is_jumping);
-		if (Input.GetKey(KeyCode.W) && !is_jumping && !in_air && !landing && !touching)
+		if (Input.GetKey(KeyCode.W) && !is_jumping && !in_air && !landing && !touching &&!dead)
         {
 			audio.PlayOneShot (jumpSound, 1);
             is_jumping = true;
@@ -120,12 +125,20 @@ public class playerManager : MonoBehaviour {
 
     void FixedUpdate()
     {
-		if (touching) {
-			transform.position = Vector3.Lerp(transform.position, stopTarget, 0.1f);
-		} else {
-			rb.transform.position += (Vector3.right * run_speed * Time.deltaTime);
-		}
+		if (dead) {
+			Color color = fadeOut.GetComponent<SpriteRenderer> ().color;
+			color.a+=.025f;
+			fadeOut.GetComponent<SpriteRenderer> ().color = color;
+		}else
+		{
+			
+			if (touching) {
+				transform.position = Vector3.Lerp (transform.position, stopTarget, 0.1f);
+			} else {
+				rb.transform.position += (Vector3.right * run_speed * Time.deltaTime);
+			}
 
+		}
         if (is_jumping)
         {
 			Vector3 vy = (Vector3.up * jump_force * Time.deltaTime);
@@ -178,7 +191,19 @@ public class playerManager : MonoBehaviour {
 
 	void GameOver()
 	{
-		//audio.PlayOneShot (dieSound, 1);
+		cam.GetComponent<AudioSource> ().Stop ();
+
+		dead=true;
+		animator.SetBool ("dead", true);
+		StartCoroutine (GameOverScene());
 	}
 		
+	IEnumerator GameOverScene()
+	{
+		yield return new WaitForSeconds (1f);
+		audio.PlayOneShot (dieSound, 1);
+		yield return new WaitForSeconds(8.5f);
+		Application.LoadLevel ("GameOver");
+
+	}
 }
