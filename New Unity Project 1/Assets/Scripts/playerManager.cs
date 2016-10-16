@@ -93,7 +93,7 @@ public class playerManager : MonoBehaviour {
 	{
 		if (art_col)
 		{
-			GetPoint ();
+			
 			art_col = false;
 		}
 		animator.SetBool ("touching", true);
@@ -107,6 +107,7 @@ public class playerManager : MonoBehaviour {
 		yield return new WaitForSeconds(0.75f);
 		touching = false;
 		animator.SetBool ("touching", false);
+		GetPoint ();
 	}
 
 
