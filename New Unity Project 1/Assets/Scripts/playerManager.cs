@@ -206,9 +206,10 @@ public class playerManager : MonoBehaviour {
 	{
 		//yield return new WaitForSeconds (1f);
 		audi.PlayOneShot (dieSound, 1);
-		yield return new WaitForSeconds(7.5f);
+		//yield return new WaitForSeconds(7.5f);
 		//Application.LoadLevel ("GameOver");
+		//SceneManager.LoadScene ("GameOver");
+		yield return new WaitForSeconds(5.5f);
 		SceneManager.LoadScene ("GameOver");
-
 	}
 }
