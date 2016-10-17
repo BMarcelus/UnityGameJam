@@ -41,6 +41,9 @@ public class playerManager : MonoBehaviour {
         rb = this.GetComponent<Rigidbody2D>();
 		animator = this.GetComponent<Animator> ();
 		audi = GetComponent<AudioSource>();
+
+		touching = true;
+		BeginTouch ();
 	}
 	
 	void Update ()
@@ -133,6 +136,7 @@ public class playerManager : MonoBehaviour {
 			Color color = fadeOut.GetComponent<SpriteRenderer> ().color;
 			color.a+=.01f;
 			fadeOut.GetComponent<SpriteRenderer> ().color = color;
+
 		}else
 		{
 			
